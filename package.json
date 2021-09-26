@@ -1,0 +1,24 @@
+{
+  "name": "consume-in-public",
+  "version": "1.0.0",
+  "description": "",
+  "main": "out/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikihau/consume-in-public.git"
+  },
+  "author": "mikihau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikihau/consume-in-public/issues"
+  },
+  "homepage": "https://github.com/mikihau/consume-in-public#readme",
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  },
+  "type": "module"
+}
