@@ -37,6 +37,7 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
+      - run: echo $INPUT_DATABASE
       - run: node ./out/index.js
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}

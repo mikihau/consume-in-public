@@ -55,6 +55,7 @@ export interface ResponderExecutionResult {
 
 function getInputFromEnvVars(): ConsumptionInput {
   const database = process.env.INPUT_DATABASE;
+  console.info(`database: ${database}`);
   if (database === "读书") {
     return {
       database: "读书",
