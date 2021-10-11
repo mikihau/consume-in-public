@@ -3,7 +3,10 @@ import { update as updateNotion } from './responders/notion.js';
 import { update as tootOnMastodon } from './responders/mastodon.js';
 import { ConsumptionAttributes, transform } from './transformers/transformer.js';
 
-(async () => processEvent())();
+
+const input = getInputFromEnvVars();
+console.debug(`Got input: ${input}`);
+(async () => processEvent(input))();
 
 export interface ConsumptionInput {
   database: string;
@@ -78,10 +81,7 @@ function getInputFromEnvVars(): ConsumptionInput {
   }
 }
 
-async function processEvent() {
-  const input = getInputFromEnvVars();
-  console.debug(`Got input: ${input}`);
-
+async function processEvent(input: ConsumptionInput) {
   const retriever = getRetriever(input);
   if (!retriever) {
     throw `No metadata retrievers implemented for link: ${input.origin}`;

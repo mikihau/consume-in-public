@@ -54,6 +54,7 @@ async function getDatabaseRecord(databaseId: string, key: string): Promise<GetPa
   if (response.results.length > 1) {
     throw `Multiple results exist for key ${key} at database id ${databaseId}`;
   }
+  console.debug(response.results[0]);
   return response.results.length === 1 ? response.results[0] : undefined;
 }
 

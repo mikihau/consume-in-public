@@ -26,18 +26,19 @@ export async function postToot(attr: ConsumptionAttributes) {
 
 function formatStatus(attr: ConsumptionAttributes) {
   let formatted = '';
-  if (isBookAttributes(attr)) {
-    formatted += `${attr.Status}《${attr.Name}》: ${attr.Origin} `;
-  } else if (isACGNAttributes(attr)) {
-    formatted += `看过${attr.Type}《${attr.Name}》: ${attr.Origin} `
-  } else {
-    throw new Error(`Undefined type of ConsumptionAttributes: ${attr}`);
-  }
   if (attr.Score && attr.Score !== "N/A") {
     formatted += `${attr.Score}`;
   }
-  if (attr.Review) {
-    formatted += `${attr.Review}`;
+  if (isBookAttributes(attr)) {
+    formatted += `${attr.Status}《${attr.Name}》`;
+  } else if (isACGNAttributes(attr)) {
+    formatted += `看过${attr.Type}《${attr.Name}》`
+  } else {
+    throw new Error(`Undefined type of ConsumptionAttributes: ${attr}`);
   }
+  if (attr.Review) {
+    formatted += `: ${attr.Review}`;
+  }
+  formatted += `${attr.Origin} `;
   return formatted;
 }
