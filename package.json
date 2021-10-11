@@ -4,7 +4,8 @@
   "description": "",
   "main": "out/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register --loader=ts-node/esm 'src/**/*Test.ts' --timeout 5000",
+    "start": "npm run build && node ./out/index.js",
     "build": "tsc"
   },
   "repository": {
@@ -18,11 +19,20 @@
   },
   "homepage": "https://github.com/mikihau/consume-in-public#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.1",
+    "@types/xmldom": "^0.1.31",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.2",
+    "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },
-  "type": "module",
   "dependencies": {
-    "@notionhq/client": "^0.4.0"
-  }
+    "@notionhq/client": "^0.4.0",
+    "node-fetch": "^3.0.0",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.32"
+  },
+  "type": "module"
 }
