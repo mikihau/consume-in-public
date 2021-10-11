@@ -37,8 +37,14 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
-      - run: echo $INPUT_DATABASE
       - run: node ./out/index.js
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          INPUT_DATABASE: ${{ github.event.inputs.database }}
+          INPUT_ORIGIN: ${{ github.event.inputs.origin }}
+          INPUT_SCORE: ${{ github.event.inputs.score }}
+          INPUT_REVIEW: ${{ github.event.inputs.review }}
+          INPUT_STATUS: ${{ github.event.inputs.status }}
+          INPUT_CATEGORY: ${{ github.event.inputs.category }}
+          INPUT_TYPE: ${{ github.event.inputs.type }}
