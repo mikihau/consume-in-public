@@ -47,11 +47,8 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
         } catch (err) {
           console.error(`Parsing error`);
         }
-        console.debug(doc);
         // @ts-ignore
-        let result = parser(doc, input);
-        console.debug(result);
-        return result;
+        return parser(doc, input);
       })
     .catch(error => {
       console.error(error);
@@ -65,7 +62,7 @@ function parseBook(content: Document, input: BookConsumptionInput): BookMetadata
     console.error("Book title not found.");
     throw "Book title not found.";
   }
-  return {
+  const result = {
     name,
     publishYear: safeSelect("//div[@id='info']//span[text()='出版年:']/following-sibling::text()[1]", content),
     publisher: safeSelect("//div[@id='info']//span[text()='出版社:']/following-sibling::text()[1]", content),
@@ -73,29 +70,26 @@ function parseBook(content: Document, input: BookConsumptionInput): BookMetadata
       ?? safeSelect("//div[@id='info']//span[text()='作者:']/following-sibling::br[1]/preceding-sibling::a[preceding-sibling::span[text()='作者:']]/text()", content),
     imgUrl: safeSelect("//*[@id='mainpic']/a/img/@src", content),
   }
+  console.debug(result);
+  return result;
 }
 
 function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata | void {
   console.debug("Parsing ACGN");
   // could be either a book (manga, light novel), or a movie (anime), or a game
   const ACGNType = inferACGNType(input);
-  console.debug(ACGNType);
   if (ACGNType === "Anime") {
     const name = safeSelect("//span[@property='v:itemreviewed']/text()", content);
-    console.debug(name);
     if (!name) {
       console.error("Anime title not found.");
       throw "Anime title not found.";
     }
-    let imgUrl = safeSelect("//img[@rel='v:image']/@src", content);
-    console.debug({
+    const result = {
       name,
-      imgUrl,
-    });
-    return {
-      name,
-      imgUrl,
+      imgUrl: safeSelect("//img[@rel='v:image']/@src", content),
     }
+    console.debug(result);
+    return result;
   }
   if (["Manga", "Light Novel"].includes(ACGNType)) {
     // TODO
@@ -106,6 +100,9 @@ function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata
     // TODO
     console.error(`Not implemented for ACGNType ${ACGNType}`);
     throw `Not implemented for ACGNType ${ACGNType}`;
+  } else {
+    console.error(`ACGNType ${ACGNType} not supported.`);
+    throw `ACGNType ${ACGNType} not supported.`;
   }
 }
 

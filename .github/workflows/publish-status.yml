@@ -3,27 +3,27 @@ on:
   workflow_dispatch:
     inputs:
       database:
-        description: '读书 or ACGN'
+        description: 'database: 读书 or ACGN'
         required: true
         default: 'ACGN'
       origin:
-        description: 'link to source'
+        description: 'origin: link to source'
         required: true
       score:
-        description: '1/2/3/4/5, required for ACGN, optional for 读书'
+        description: 'score of 1/2/3/4/5, required for ACGN, optional for 读书'
         required: false
       review:
         description: 'review, recommended for all'
         required: false
       status:
-        description: '想读/在读/读过/放弃; required for 读书, ignored for ACGN'
+        description: 'status: 想读/在读/读过/放弃; required for 读书, ignored for ACGN'
         required: false
       category:
-        description: 'recommeneded for 读书, ignored for ACGN'
+        description: 'category: recommeneded for 读书, ignored for ACGN'
         required: false
         default: 'Uncategorized'
       type:
-        description: 'Anime/Light Novel/Manga/Game, recommeneded for ACGN, ignored for 读书'
+        description: 'type: Anime/Light Novel/Manga/Game, recommeneded for ACGN, ignored for 读书'
         required: false
         default: 'Anime'
 

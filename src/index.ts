@@ -74,7 +74,7 @@ function getInputFromEnvVars(): ConsumptionInput {
       origin: process.env.INPUT_ORIGIN || "",
       review: process.env.INPUT_REVIEW || "",
       score: process.env.INPUT_SCORE as unknown as ACGNConsumptionInput["score"],
-      type: process.env.INPUT_CATEGORY || "",
+      type: process.env.INPUT_TYPE || "",
     } as ACGNConsumptionInput;
   } else {
     throw `database not supported: ${database}`;
