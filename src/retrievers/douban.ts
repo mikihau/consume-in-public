@@ -22,6 +22,7 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
     });
   }
   
+  console.debug(`fetching from ${input.origin}`);
   return await fetch(input.origin, { headers: headers })
     .then(
       (r) => r.text())
@@ -45,6 +46,7 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
 }
 
 function parseBook(content: Document, input: BookConsumptionInput): BookMetadata {
+  console.debug("Parsing book");
   const name = safeSelect("/html/body//h1/span/text()", content);
   if (!name) {
     console.error("Book title not found.");
@@ -61,6 +63,7 @@ function parseBook(content: Document, input: BookConsumptionInput): BookMetadata
 }
 
 function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata | void {
+  console.debug("Parsing ACGN");
   // could be either a book (manga, light novel), or a movie (anime), or a game
   const ACGNType = inferACGNType(input);
   if (ACGNType === "Anime") {

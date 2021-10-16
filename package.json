@@ -5,7 +5,7 @@
   "main": "out/index.js",
   "scripts": {
     "test": "mocha -r ts-node/register --loader=ts-node/esm 'src/**/*Test.ts' --timeout 5000",
-    "start": "npm run build && node ./out/index.js",
+    "start": "npm run build && node --unhandled-rejections=strict ./out/index.js",
     "build": "tsc"
   },
   "repository": {
