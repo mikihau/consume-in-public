@@ -37,7 +37,7 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
-      - run: node ./out/index.js
+      - run: node --unhandled-rejections=strict ./out/index.js
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}

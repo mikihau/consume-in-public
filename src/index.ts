@@ -17,16 +17,9 @@ export const logger = winston.createLogger({
   ]
 });
 
-//const input = getInputFromEnvVars();
-//logger.debug(input);
-//(async () => processEvent(input))();
-(async () => processEvent({
-  database: "ACGN",
-  origin: "https://movie.douban.com/subject/35235192/",
-  type: "Anime",
-  score: 5,
-  review: "1-3集是这部的劝退集，人物生硬又刻板，到最后都让我喜欢不来蓝毛。学校里上下级的窒息感也让人不适。然而！中后期山田彩子和星野薰两集单人回拔高了整部剧的维度，毕竟这部里没有迫害、没有玩梗、没有内斗、没有恋爱脑、没有卖百合，单纯是一个个有野心的女孩子都想要成为最抹布洗的那一个的群像正剧。ED赛高！",
-} as ACGNConsumptionInput))();
+const input = getInputFromEnvVars();
+logger.debug(input);
+(async () => processEvent(input))();
 
 export interface ConsumptionInput {
   database: string;
@@ -118,10 +111,15 @@ async function processEvent(input: ConsumptionInput) {
 
   const result: ResponderExecutionResult[] = [];
   for (let responder of getResponders(attributes)) {
-    //let response = await responder(attributes);
-    let response = {"success": true};
+    let response = await responder(attributes);
     logger.info(`Response from responder ${responder.name}: ${JSON.stringify(response, null, 2)}`);
     result.push(response);
+  }
+
+  result.push({success: false});
+  // exit with non-0 exit code if any of the reponders fail
+  if (result.filter((entry) => !entry.success).length > 0) {
+    process.exit(1);
   }
 
   return result;
