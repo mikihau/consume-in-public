@@ -23,20 +23,33 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
   }
   
   console.debug(`fetching from ${input.origin}`);
+  let status: number;
   return await fetch(input.origin, { headers: headers })
     .then(
-      (r) => r.text())
+      (r) => {
+        status = r.status;
+        return r.text();
+      })
     .then(
       (content) => {
-        let doc = new DOMParser({
-          locator: {},
-          errorHandler: {
-            // suppress parser warnings/errors
-            warning: function (w) { },
-            error: function (e) { },
-            fatalError: function (e) { console.error(e) }
-          }
-        }).parseFromString(content);
+        console.log(status);
+        let doc;
+        try {
+          doc = new DOMParser({
+            locator: {},
+            errorHandler: {
+              // suppress parser warnings/errors
+              warning: function (w) { },
+              error: function (e) { },
+              fatalError: function (e) { console.error(e) }
+            }
+          }).parseFromString(content);
+        } catch (err) {
+          console.error(`Parsing error`);
+        }
+        console.debug(doc);
+        // @ts-ignore
+        console.debug(parser(doc, input));
         // @ts-ignore
         return parser(doc, input);
       })
