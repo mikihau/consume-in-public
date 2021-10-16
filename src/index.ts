@@ -93,7 +93,7 @@ async function processEvent(input: ConsumptionInput) {
   const enrichedInput = { ...input, metadata };
   console.info(`Enriched input: ${JSON.stringify(enrichedInput, null, 2)}`);
 
-  /*const attributes = transform(enrichedInput);
+  const attributes = transform(enrichedInput);
   console.info(`Transformed input: ${JSON.stringify(attributes, null, 2)}`);
 
   const result: ResponderExecutionResult[] = [];
@@ -103,7 +103,7 @@ async function processEvent(input: ConsumptionInput) {
     result.push(response);
   }
 
-  return result;*/
+  return result;
 }
 
 function getRetriever(input: ConsumptionInput): undefined | ((input: ConsumptionInput)=> Promise<BookMetadata | ACGNMetadata | void>) {
