@@ -49,9 +49,9 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
         }
         console.debug(doc);
         // @ts-ignore
-        console.debug(parser(doc, input));
-        // @ts-ignore
-        return parser(doc, input);
+        let result = parser(doc, input);
+        console.debug(result);
+        return result;
       })
     .catch(error => {
       console.error(error);
@@ -79,23 +79,32 @@ function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata
   console.debug("Parsing ACGN");
   // could be either a book (manga, light novel), or a movie (anime), or a game
   const ACGNType = inferACGNType(input);
+  console.debug(ACGNType);
   if (ACGNType === "Anime") {
     const name = safeSelect("//span[@property='v:itemreviewed']/text()", content);
+    console.debug(name);
     if (!name) {
       console.error("Anime title not found.");
       throw "Anime title not found.";
     }
+    let imgUrl = safeSelect("//img[@rel='v:image']/@src", content);
+    console.debug({
+      name,
+      imgUrl,
+    });
     return {
       name,
-      imgUrl: safeSelect("//img[@rel='v:image']/@src", content),
+      imgUrl,
     }
   }
   if (["Manga", "Light Novel"].includes(ACGNType)) {
     // TODO
+    console.error(`Not implemented for ACGNType ${ACGNType}`);
     throw `Not implemented for ACGNType ${ACGNType}`;
   }
   if (ACGNType === "Game") {
     // TODO
+    console.error(`Not implemented for ACGNType ${ACGNType}`);
     throw `Not implemented for ACGNType ${ACGNType}`;
   }
 }
