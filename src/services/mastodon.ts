@@ -1,4 +1,5 @@
 import { ConsumptionAttributes, isBookAttributes, isACGNAttributes } from '../transformers/transformer.js';
+import { logger } from '../index.js';
 import fetch from 'node-fetch';
 
 // TODO: to config
@@ -7,7 +8,7 @@ const instanceAddr = "https://m.cmx.im";
 export async function postToot(attr: ConsumptionAttributes) {
   const params = new URLSearchParams();
   params.append('status', formatStatus(attr));
-  console.info(params);
+  logger.info(params);
   const response = await fetch(`${instanceAddr}/api/v1/statuses`, {
     method: 'POST',
     headers: {
@@ -17,9 +18,9 @@ export async function postToot(attr: ConsumptionAttributes) {
   }).then(
     res => res.json()
   ).then(
-    json => console.log(json)
+    json => logger.debug(json)
   ).catch(err => {
-      console.error(err);
+      logger.error(err);
       throw new Error(err);
   })
 }

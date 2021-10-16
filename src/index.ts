@@ -1,12 +1,32 @@
+//import { createLogger, format, transports } from 'winston';
 import { retrieve as retrieveDouban } from './retrievers/douban.js';
 import { update as updateNotion } from './responders/notion.js';
 import { update as tootOnMastodon } from './responders/mastodon.js';
 import { ConsumptionAttributes, transform } from './transformers/transformer.js';
+import winston from 'winston';
 
+export const logger = winston.createLogger({
+  level: 'debug',
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      )
+    })
+  ]
+});
 
-const input = getInputFromEnvVars();
-console.debug(input);
-(async () => processEvent(input))();
+//const input = getInputFromEnvVars();
+//logger.debug(input);
+//(async () => processEvent(input))();
+(async () => processEvent({
+  database: "ACGN",
+  origin: "https://movie.douban.com/subject/35235192/",
+  type: "Anime",
+  score: 5,
+  review: "1-3集是这部的劝退集，人物生硬又刻板，到最后都让我喜欢不来蓝毛。学校里上下级的窒息感也让人不适。然而！中后期山田彩子和星野薰两集单人回拔高了整部剧的维度，毕竟这部里没有迫害、没有玩梗、没有内斗、没有恋爱脑、没有卖百合，单纯是一个个有野心的女孩子都想要成为最抹布洗的那一个的群像正剧。ED赛高！",
+} as ACGNConsumptionInput))();
 
 export interface ConsumptionInput {
   database: string;
@@ -58,7 +78,7 @@ export interface ResponderExecutionResult {
 
 function getInputFromEnvVars(): ConsumptionInput {
   const database = process.env.INPUT_DATABASE;
-  console.info(`database: ${database}`);
+  logger.info(`database: ${database}`);
   if (database === "读书") {
     return {
       database: "读书",
@@ -91,15 +111,16 @@ async function processEvent(input: ConsumptionInput) {
     throw `Unable to retrieve metadata from link: ${input.origin}`;
   }
   const enrichedInput = { ...input, metadata };
-  console.info(`Enriched input: ${JSON.stringify(enrichedInput, null, 2)}`);
+  logger.info(`Enriched input: ${JSON.stringify(enrichedInput, null, 2)}`);
 
   const attributes = transform(enrichedInput);
-  console.info(`Transformed input: ${JSON.stringify(attributes, null, 2)}`);
+  logger.info(`Transformed input: ${JSON.stringify(attributes, null, 2)}`);
 
   const result: ResponderExecutionResult[] = [];
   for (let responder of getResponders(attributes)) {
-    let response = await responder(attributes);
-    console.info(`Response from responder ${responder.name}: ${JSON.stringify(response, null, 2)}`);
+    //let response = await responder(attributes);
+    let response = {"success": true};
+    logger.info(`Response from responder ${responder.name}: ${JSON.stringify(response, null, 2)}`);
     result.push(response);
   }
 

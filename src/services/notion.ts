@@ -1,6 +1,7 @@
 import { Client } from '@notionhq/client';
 import { CreatePageParameters, GetPageResponse } from '@notionhq/client/build/src/api-endpoints';
 import { ConsumptionAttributes, isBookAttributes, isACGNAttributes } from '../transformers/transformer.js';
+import { logger } from '../index.js';
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN
@@ -34,10 +35,10 @@ export async function getDatabaseId(databaseName: string): Promise<string> {
 export async function upsertDatabaseRecord(databaseId: string, attr: ConsumptionAttributes) {
   const record = await getDatabaseRecord(databaseId, attr.Origin);
   if (!record) {
-    console.debug(`${attr.Origin} not found, creating ...`);
+    logger.debug(`${attr.Origin} not found, creating ...`);
     await createDatabaseRecord(databaseId, attr);
   } else {
-    console.debug(`${attr.Origin} exists, updating ...`);
+    logger.debug(`${attr.Origin} exists, updating ...`);
     await updateDatabaseRecord(record.id, attr);
   }
 }
@@ -54,7 +55,7 @@ async function getDatabaseRecord(databaseId: string, key: string): Promise<GetPa
   if (response.results.length > 1) {
     throw `Multiple results exist for key ${key} at database id ${databaseId}`;
   }
-  console.debug(response.results[0]);
+  logger.debug(response.results[0]);
   return response.results.length === 1 ? response.results[0] : undefined;
 }
 
@@ -72,7 +73,7 @@ async function createDatabaseRecord(databaseId: string, attr: ConsumptionAttribu
       }
     },
   })
-  console.debug(response);
+  logger.debug(response);
 }
 
 async function updateDatabaseRecord(recordId: string, attr: ConsumptionAttributes) {
@@ -91,7 +92,7 @@ async function updateDatabaseRecord(recordId: string, attr: ConsumptionAttribute
     // @ts-ignore
     properties,
   });
-  console.debug(response);
+  logger.debug(response);
 }
 
 function generatePropertyParams(attr: ConsumptionAttributes): CreatePageParameters['properties'] {

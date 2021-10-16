@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import xpath, { SelectedValue } from 'xpath';
 import { DOMParser } from 'xmldom';
-import { ConsumptionInput, BookMetadata, ACGNMetadata, isBookConsumptionInput, isACGNConsumptionInput, BookConsumptionInput, ACGNConsumptionInput } from '../index.js';
+import { logger, ConsumptionInput, BookMetadata, ACGNMetadata, isBookConsumptionInput, isACGNConsumptionInput, BookConsumptionInput, ACGNConsumptionInput } from '../index.js';
 import { inferACGNType } from '../transformers/transformer.js';
 
 // borrowed from https://github.com/doubaniux/boofilsic/blob/master/common/scraper.py
@@ -17,12 +17,12 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
   } else {
     return new Promise((_, reject) => {
       // @ts-ignore: Property does not exist on type 'never'
-      console.error(`Undefined parser for database ${input.database}.`);
+      logger.error(`Undefined parser for database ${input.database}.`);
       reject(`Undefined parser for database ${input.database}.`);
     });
   }
   
-  console.debug(`fetching from ${input.origin}`);
+  logger.debug(`fetching from ${input.origin}`);
   let status: number;
   return await fetch(input.origin, { headers: headers })
     .then(
@@ -32,7 +32,7 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
       })
     .then(
       (content) => {
-        console.log(status);
+        logger.debug(status);
         let doc;
         try {
           doc = new DOMParser({
@@ -41,25 +41,25 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
               // suppress parser warnings/errors
               warning: function (w) { },
               error: function (e) { },
-              fatalError: function (e) { console.error(e) }
+              fatalError: function (e) { logger.error(e) }
             }
           }).parseFromString(content);
         } catch (err) {
-          console.error(`Parsing error`);
+          logger.error(`Parsing error`);
         }
         // @ts-ignore
         return parser(doc, input);
       })
     .catch(error => {
-      console.error(error);
+      logger.error(error);
     });
 }
 
 function parseBook(content: Document, input: BookConsumptionInput): BookMetadata {
-  console.debug("Parsing book");
+  logger.debug("Parsing book");
   const name = safeSelect("/html/body//h1/span/text()", content);
   if (!name) {
-    console.error("Book title not found.");
+    logger.error("Book title not found.");
     throw "Book title not found.";
   }
   const result = {
@@ -70,38 +70,38 @@ function parseBook(content: Document, input: BookConsumptionInput): BookMetadata
       ?? safeSelect("//div[@id='info']//span[text()='作者:']/following-sibling::br[1]/preceding-sibling::a[preceding-sibling::span[text()='作者:']]/text()", content),
     imgUrl: safeSelect("//*[@id='mainpic']/a/img/@src", content),
   }
-  console.debug(result);
+  logger.debug(result);
   return result;
 }
 
 function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata | void {
-  console.debug("Parsing ACGN");
+  logger.debug("Parsing ACGN");
   // could be either a book (manga, light novel), or a movie (anime), or a game
   const ACGNType = inferACGNType(input);
   if (ACGNType === "Anime") {
     const name = safeSelect("//span[@property='v:itemreviewed']/text()", content);
     if (!name) {
-      console.error("Anime title not found.");
+      logger.error("Anime title not found.");
       throw "Anime title not found.";
     }
     const result = {
       name,
       imgUrl: safeSelect("//img[@rel='v:image']/@src", content),
     }
-    console.debug(result);
+    logger.debug(result);
     return result;
   }
   if (["Manga", "Light Novel"].includes(ACGNType)) {
     // TODO
-    console.error(`Not implemented for ACGNType ${ACGNType}`);
+    logger.error(`Not implemented for ACGNType ${ACGNType}`);
     throw `Not implemented for ACGNType ${ACGNType}`;
   }
   if (ACGNType === "Game") {
     // TODO
-    console.error(`Not implemented for ACGNType ${ACGNType}`);
+    logger.error(`Not implemented for ACGNType ${ACGNType}`);
     throw `Not implemented for ACGNType ${ACGNType}`;
   } else {
-    console.error(`ACGNType ${ACGNType} not supported.`);
+    logger.error(`ACGNType ${ACGNType} not supported.`);
     throw `ACGNType ${ACGNType} not supported.`;
   }
 }
