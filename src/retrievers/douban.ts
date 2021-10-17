@@ -106,7 +106,7 @@ function parseACGN(content: Document, input: ACGNConsumptionInput): ACGNMetadata
   }
 }
 
-const headers = {
+export const headers = {
   'Host': '',
   'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:70.0) Gecko/20100101 Firefox/70.0',
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -118,7 +118,7 @@ const headers = {
   'Cache-Control': 'no-cache',
 }
 
-function safeSelect(selector: string, doc: Document): string {
+export function safeSelect(selector: string, doc: Document): string {
   const selected: SelectedValue[] = xpath.select(selector, doc);
   if (selected && selected[0]) {
     if (typeof selected[0] === "string") {
@@ -129,4 +129,16 @@ function safeSelect(selector: string, doc: Document): string {
     }
   }
   return "";
+}
+
+export function safeSelectMultiple(selector: string, doc: Document): string[] {
+  const selected: SelectedValue[] = xpath.select(selector, doc);
+  if (selected && selected[0]) {
+    if (typeof selected[0] === "string") {
+      return selected.map(x => x as string);
+    } else {
+      return selected.map(x => (x as Attr).nodeValue?.trim() as string).filter(x => Boolean(x));
+    }
+  }
+  return [];
 }

@@ -1,4 +1,5 @@
 import { retrieve as retrieveDouban } from './retrievers/douban.js';
+import { retrieve as retrieveGoodreads } from './retrievers/goodreads.js';
 import { update as updateNotion } from './responders/notion.js';
 import { update as tootOnMastodon } from './responders/mastodon.js';
 import { ConsumptionAttributes, transform } from './transformers/transformer.js';
@@ -145,7 +146,7 @@ function getRetriever(input: ConsumptionInput): undefined | ((input: Consumption
   const retrievers = {
     "douban": retrieveDouban,
     //"bangumi": retrieveDouban, // TODO
-    //"goodreads": retrieveDouban,  // TODO
+    "goodreads": retrieveGoodreads,
   }
   
   let keyword: keyof typeof retrievers;
