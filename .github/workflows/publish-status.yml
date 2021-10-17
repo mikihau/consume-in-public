@@ -39,6 +39,7 @@ jobs:
       - run: npm run build
       - run: node --unhandled-rejections=strict ./out/index.js
         env:
+          ENVIRONMENT: production
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
           INPUT_DATABASE: ${{ github.event.inputs.database }}
