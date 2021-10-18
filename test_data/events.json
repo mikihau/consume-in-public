@@ -15,8 +15,17 @@
   },
   {
     "database": "读书",
-    "origin": "https://goodreads.com/book/show/58153482-software-architecture",
-    "status": "想读",
-    "category": "Uncategorized"
+    "origin": "https://www.goodreads.com/book/show/179133.Domain_Driven_Design",
+    "status": "读过",
+    "score": 3,
+    "category": "Uncategorized",
+    "review": "这本书的精神是不错的，第二第三部分提炼的一些patterns算是经得起时间考验了。不过我对这本书能说的好话就这些，举例不当、语言冗杂、解释东西大而化之(handwavy)之类的问题到处都是，跟本书主要back的技术J2EE一样又长又awkward。以至于有个pdf专门精简了这本书叫Domain Driven Design Quickly你能想象么？"
+  },
+  {
+    "database": "ACGN",
+    "origin": "https://bangumi.tv/subject/328585",
+    "type": "Game",
+    "score": 4,
+    "review": "这里有last note of the golden witch，看过汉化。我很喜欢海猫的各种外传小品，因为没什么恶趣味的整活，乐一乐不开心吗。Last Note 回收利用了之前的人物也是很巧妙的考虑，值得一看。"
   }
 ]

@@ -63,6 +63,9 @@ export function inferACGNType(input: ACGNConsumptionInput): ACGNAttributes["Type
   if (input.type) {
     return input.type as ACGNAttributes["Type"];
   }
+  if (input.metadata && input.metadata.type) {
+    return input.metadata.type;
+  }
   if (input.origin.includes("movie.douban.com")) {
     return "Anime";
   }

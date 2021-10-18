@@ -1,8 +1,9 @@
 import { retrieve as retrieveDouban } from './retrievers/douban.js';
 import { retrieve as retrieveGoodreads } from './retrievers/goodreads.js';
+import { retrieve as retrieveBangumi } from './retrievers/bangumi.js';
 import { update as updateNotion } from './responders/notion.js';
 import { update as tootOnMastodon } from './responders/mastodon.js';
-import { ConsumptionAttributes, transform } from './transformers/transformer.js';
+import { ACGNAttributes, ConsumptionAttributes, transform } from './transformers/transformer.js';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -61,6 +62,7 @@ export interface BookMetadata {
 export interface ACGNMetadata {
   name: string;
   imgUrl: string;
+  type?: ACGNAttributes["Type"]
 }
 
 export interface ResponderExecutionResult {
@@ -145,7 +147,7 @@ async function processEvent<T extends ConsumptionInput>(input: T) {
 function getRetriever(input: ConsumptionInput): undefined | ((input: ConsumptionInput)=> Promise<BookMetadata | ACGNMetadata | void>) {
   const retrievers = {
     "douban": retrieveDouban,
-    //"bangumi": retrieveDouban, // TODO
+    "bangumi": retrieveBangumi,
     "goodreads": retrieveGoodreads,
   }
   
