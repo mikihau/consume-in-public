@@ -25,7 +25,6 @@ on:
       type:
         description: 'type: Anime/Light Novel/Manga/Game, recommeneded for ACGN, ignored for 读书'
         required: false
-        default: 'Anime'
 
 jobs:
   build:
