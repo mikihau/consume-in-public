@@ -2,7 +2,7 @@ import { retrieve as retrieveDouban } from './retrievers/douban.js';
 import { retrieve as retrieveGoodreads } from './retrievers/goodreads.js';
 import { retrieve as retrieveBangumi } from './retrievers/bangumi.js';
 import { update as updateNotion } from './responders/notion.js';
-import { update as tootOnMastodon } from './responders/mastodon.js';
+import { update as tootOnAkkoma } from './responders/akkoma.js';
 import { ACGNAttributes, ConsumptionAttributes, transform } from './transformers/transformer.js';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -161,5 +161,8 @@ function getRetriever(input: ConsumptionInput): undefined | ((input: Consumption
 }
 
 function getResponders(attr: ConsumptionAttributes): ((attr: ConsumptionAttributes) => Promise<ResponderExecutionResult>)[] {
-  return [updateNotion, tootOnMastodon];
+  return [
+    updateNotion,
+    tootOnAkkoma,
+  ];
 }

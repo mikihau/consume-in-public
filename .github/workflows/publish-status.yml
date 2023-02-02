@@ -41,6 +41,7 @@ jobs:
           ENVIRONMENT: production
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          AKKOMA_token: ${{ secrets.AKKOMA_TOKEN }}
           INPUT_DATABASE: ${{ github.event.inputs.database }}
           INPUT_ORIGIN: ${{ github.event.inputs.origin }}
           INPUT_SCORE: ${{ github.event.inputs.score }}
