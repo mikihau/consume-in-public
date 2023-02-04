@@ -15,11 +15,11 @@
   },
   {
     "database": "读书",
-    "origin": "https://www.goodreads.com/book/show/179133.Domain_Driven_Design",
+    "origin": "https://www.goodreads.com/en/book/show/49358915",
     "status": "读过",
     "score": 3,
     "category": "Uncategorized",
-    "review": "这本书的精神是不错的，第二第三部分提炼的一些patterns算是经得起时间考验了。不过我对这本书能说的好话就这些，举例不当、语言冗杂、解释东西大而化之(handwavy)之类的问题到处都是，跟本书主要back的技术J2EE一样又长又awkward。以至于有个pdf专门精简了这本书叫Domain Driven Design Quickly你能想象么？"
+    "review": "我读这本书的目的是为了激励自己锻炼。"
   },
   {
     "database": "ACGN",

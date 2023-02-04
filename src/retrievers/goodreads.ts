@@ -40,29 +40,24 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
           logger.error(`Parsing error; doc empty`);
         }
 
-        const name = safeSelect("//h1[@id='bookTitle']/text()", doc as Document);
+        const shortData = JSON.parse(safeSelect("//script[@type='application/ld+json']/text()", doc as Document));
+        const name = shortData['name'];
         if (!name) {
           logger.error("Book title not found.");
           throw "Book title not found.";
         }
+        const authors = shortData['author'].map((entry: { [x: string]: any; }) => entry['name']).join(' ,');
 
+        const longData = JSON.parse(safeSelect("//script[@id='__NEXT_DATA__']/text()", doc as Document));
         let publishYear: string = '';
         let publisher: string = '';
-        // see if the book is already published
-        let publishInfo = safeSelect("//div[contains(text(), 'Published') and @class='row']/text()", doc as Document);
-        const matchPublished = publishInfo.match(regexPublished);
-        if (matchPublished) {
-          publishYear = matchPublished[2].trim();
-          publisher = matchPublished[3].trim();
-        }
-
-        // otherwise, see if the book is about to be published
-        if (!publishYear || !publisher) {
-          publishInfo = safeSelect("//div[contains(text(), 'Expected publication') and @class='row']/text()", doc as Document);
-          const matchExpectedPublication = publishInfo.match(regexExpectedPublication);
-          if (matchExpectedPublication) {
-            publishYear = matchExpectedPublication[2].trim();
-            publisher = matchExpectedPublication[3].trim();
+        for (let [key, value] of Object.entries(longData['props']['pageProps']['apolloState'])) {
+          logger.debug(key);
+          if (key.startsWith('Book:kca://book/')) {
+            const innerObj = value as any;
+            publishYear = new Date(innerObj['details']['publicationTime']).getFullYear().toString();
+            publisher = innerObj['details']['publisher'];
+            break;
           }
         }
 
@@ -70,23 +65,13 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
           name,
           publishYear,
           publisher,
-          authors: safeSelectMultiple("//a[@class='authorName'][not(../span[@class='authorName greyText smallText role'])]/span/text()", doc as Document).join(', '),
-          imgUrl: safeSelect("//img[@id='coverImage']/@src", doc as Document),
+          authors,
+          imgUrl: safeSelect("//meta[@property='og:image']/@content", doc as Document),
         }
-        logger.debug(result);
+        logger.debug(JSON.stringify(result));
         return result;
       })
     .catch(error => {
       logger.error(error);
     });
 }
-
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const regexPublished = new RegExp(
-  // use the 's' flag to get the dot to match '\n'
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/dotAll
-  '.*Published.*(' + months.join('|') + ').*(\\d\\d\\d\\d).+by\\s*(.+)\\s*', 's'
-);
-const regexExpectedPublication = new RegExp(
-  '.*Expected publication.*(' + months.join('|') + ').*(\\d\\d\\d\\d).+by\\s*(.+)\\s*', 's'
-);

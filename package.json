@@ -4,8 +4,8 @@
   "description": "",
   "main": "out/index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register --loader=ts-node/esm 'src/**/*Test.ts' --timeout 5000",
-    "start": "npm run build && node --unhandled-rejections=strict ./out/index.js",
+    "test": "npm run build && mocha -r ts-node/register --loader=ts-node/esm 'src/**/*Test.ts' --timeout 5000",
+    "start": "source .env && npm run build && node --unhandled-rejections=strict ./out/index.js",
     "build": "tsc"
   },
   "repository": {
@@ -19,19 +19,19 @@
   },
   "homepage": "https://github.com/mikihau/consume-in-public#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.22",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^16.10.1",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^16.18.11",
     "@types/xmldom": "^0.1.31",
-    "chai": "^4.3.4",
-    "mocha": "^9.1.2",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "chai": "^4.3.7",
+    "mocha": "^9.2.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@notionhq/client": "^0.4.3",
-    "node-fetch": "^3.0.0",
-    "winston": "^3.3.3",
+    "@notionhq/client": "^0.4.13",
+    "node-fetch": "^3.3.0",
+    "winston": "^3.8.2",
     "xmldom": "^0.6.0",
     "xpath": "^0.0.32"
   },
