@@ -41,8 +41,8 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
         }
 
         const shortData = JSON.parse(safeSelect("//script[@type='application/ld+json']/text()", doc as Document));
-        const name = shortData['name'];
-        if (!name) {
+        let title = shortData['name'];
+        if (!title) {
           logger.error("Book title not found.");
           throw "Book title not found.";
         }
@@ -55,6 +55,8 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
           logger.debug(key);
           if (key.startsWith('Book:kca://book/')) {
             const innerObj = value as any;
+            // use the shorter title if present and truncate to 100 (notion limit)
+            title = (innerObj?.['title'] ?? title).substring(0, 100);
             publishYear = new Date(innerObj['details']['publicationTime']).getFullYear().toString();
             publisher = innerObj['details']['publisher'];
             break;
@@ -62,7 +64,7 @@ export async function retrieve<T extends ConsumptionInput>(input: T): Promise<Bo
         }
 
         const result = {
-          name,
+          name: title,
           publishYear,
           publisher,
           authors,
